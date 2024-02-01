@@ -1,0 +1,166 @@
+1.
+import pandas as pd
+dataset1 = pd.read_csv("crime.csv") 
+dataset1
+dataset1.head()
+dataset1.tail()
+dataset1.head(10)
+dataset1.tail(10)
+type(dataset1)
+dataset1.isnull().tail()
+dataset1.notnull().tail()
+dataset1.isnull().sum()
+dataset1[dataset1.Robbery.isnull()]
+dataset1.shape
+dataset1['Robbery'].value_counts()
+for col in dataset1.columns:
+      display(dataset1[col].value_counts())
+dataset_length=len(dataset1) 
+dataset_length
+dataset_col=len(dataset1.columns)
+dataset_col
+dataset1.describe()
+dataset1.Murder.describe()
+dataset1.skew()
+dataset1.var()
+dataset1.kurtosis()
+print(dataset1.dtypes)
+
+#numpy
+import numpy as np
+import numpy as np
+arr = np.array([1, 2, 3, 4, 5])
+print(arr)
+
+import numpy as np
+arr = np.array([1, 2, 3, 4, 5])
+print(arr) 
+print(type(arr))
+
+#Create a 1-D array containing the values 1,2,3,4,5:
+import numpy as np
+arr = np.array([1, 2, 3, 4, 5])
+print(arr)
+3.
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+crime = pd.read_csv('crime.csv')
+
+# Scatter Plot
+plt.plot(crime['Murder'], crime['Assault'])
+plt.xlabel('Murder')
+plt.ylabel('Assault')
+plt.title('Murder Vs Assault')
+plt.show()
+
+# Seaborn Scatter Plot
+plt.figure(figsize=(12, 6))
+sns.scatterplot(x='Murder', y='Assault', hue='Murder', s=100, data=crime)
+plt.title('Murder Vs Assault')
+plt.show()
+
+# Histogram
+plt.figure(figsize=(12, 6))
+plt.title('Histogram for robbery')
+plt.hist(crime['Robbery'])
+plt.show()
+
+# Bar Plot
+plt.figure(figsize=(12, 6))
+plt.title('Bar Plot for Robbery')
+plt.bar(crime.index, crime['Robbery'])
+plt.show()
+
+# Seaborn Bar Plot
+plt.figure(figsize=(12, 6))
+sns.barplot(x='Robbery', y='Year', data=crime)
+plt.title('Bar Plot for Robbery')
+plt.show()
+
+# Scatter Plot with Population and CarTheft
+x = crime['Population']
+y = crime['CarTheft']
+plt.figure(figsize=(12, 6))
+plt.scatter(x, y)
+plt.xlabel('Population')
+plt.ylabel('CarTheft')
+plt.title('Population Vs CarTheft')
+plt.show()
+7.
+import pandas as pd 
+import pickle 
+
+data = pd.read_csv('data.csv')
+
+# Slicing Data 
+slice1 = data.iloc[0:399,:] 
+slice2 = data.iloc[400:800,:] 
+slice3 = data.iloc[801:1200,:] 
+slice4 = data.iloc[1201:,:]
+
+def mapper(data): 
+    mapped = []
+    for index, row in data.iterrows(): 
+        mapped.append((row['quality'], row['volatile acidity']))
+    return mapped
+
+map1 = mapper(slice1) 
+map2 = mapper(slice2) 
+map3 = mapper(slice3) 
+map4 = mapper(slice4)
+
+shuffled = {
+    3.0: [], 
+    4.0: [], 
+    5.0: [], 
+    6.0: [], 
+    7.0: [],
+    8.0: [], 
+} 
+
+for i in [map1, map2, map3, map4]:
+    for j in i:
+        shuffled[j[0]].append(j[1])
+
+file = open('shuffled.pkl', 'ab') 
+pickle.dump(shuffled, file) 
+file.close()
+
+print("Data has been mapped. Now, run reducer.py to reduce the contents in shuffled.pkl file.")
+
+import pickle 
+
+file = open('shuffled.pkl', 'rb') 
+shuffled = pickle.load(file) 
+
+def reduce(shuffled_dict): 
+    reduced = {}
+    for i in shuffled_dict:
+        reduced[i] = sum(shuffled_dict[i]) / len(shuffled_dict[i])
+    return reduced
+
+final = reduce(shuffled) 
+print("Average volatile acidity in different classes of wine: ")
+for i in final:
+    print(i, ':', final[i])
+
+8.
+from pyspark.ml.clustering import KMeans
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("KMeansExample").getOrCreate()
+
+dataset = spark.read.format("libsvm").load("data/mllib/sample_kmeans_data.txt")
+
+kmeans = KMeans().setK(2).setSeed(1)
+model = kmeans.fit(dataset)
+
+wssse = model.computeCost(dataset)
+print("Within Set Sum of Squared Errors = " + str(wssse))
+
+centers = model.clusterCenters()
+print("Cluster Centers: ")
+for center in centers:
+    print(center)
